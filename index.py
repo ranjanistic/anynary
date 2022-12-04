@@ -1,6 +1,7 @@
 # Own number system
 
-"""
+def encrypt(decimal, chars=[]):
+  """
   x = 26
 
   b = 4
@@ -32,8 +33,17 @@
   daa,dab,dac,dad, dba,dbb,dbc,dbd, dca,dcb,dcc,dcd, dda,ddb,ddc,ddd,
 
   baaa,
-
-"""
+  """
+  b = len(chars)
+  x = decimal
+  repr = []
+  while x > 1:
+    index = x%b
+    rep = x//b
+    x = rep + 1
+    repr.append(chars[index])
+  repr.reverse()
+  return "".join(repr)
 
 print("\n\u001B[34mCreate your own counting representation system.\u001B[0m\n")
 
@@ -42,7 +52,7 @@ base = input("Enter the max count of unique characters ")
 if not base.isdigit():
   print("Invalid integer")
   exit(1)
-base = int(base)
+base = int(base) - 1
 chars = []
 
 for i in range(0,base):
@@ -59,7 +69,7 @@ chars.insert(0,z)
 print(chars)
 base = len(chars)
 sys = print("Name of your counting system: ")
-sys = sys || "your"
+sys = sys or "your"
 ch = -1
 while ch != 99:
   print("\nWhat do you want from your system?\n")
@@ -75,22 +85,12 @@ while ch != 99:
     if x in range(0,base):
       print(chars[x])
       continue
-    repr = ""
-    rep = x / base
-    
-    x % base
-    for i in range(0,x):
-      for j in range(0,base):
-      chars[0]
+    print(encrypt(x, chars))
   elif ch == 2:
     x = input(f"Enter a {sys} number representative: ")
   elif ch == 3:
     nos = []
     x = int(input(f"Enter limit in decimal representation: "))
-    for i in range(0,x):
-      if i%base == 0:
-        nos.append(
-      chars[i]
   else:
     break
 
