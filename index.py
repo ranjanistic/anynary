@@ -1,18 +1,26 @@
 # Own number system
 
 """
-  x = 19
+  x = 26
 
   b = 4
   ch = [a, b, c, d]
        [i1,i2,i3,i4] (1 based index for simplicity)
-   rep = x/b = 4
-   extra = x%b = 3 (i3)
-   set = rep + extra = 5 (the x falls in 5th repeatable set)
-   set/b
-   dig = n
 
-   repr = [    ch[extra-2],ch[extra] ]
+   rep = x//b = 6
+   extra = x%b = 2 (i2)
+   set = rep + 1 = 7 (x falls in 7th d0 repeatable set)
+
+   rep1 = set//b = 1
+   extra1 = set%b = 3 (i3)
+   set1 = rep1 + 1 = 2 (x falls in 2nd d1 repeatable set)
+
+   rep2 = set1//b = 0
+   extra2 = set1%b = 2 (i2)
+   set2 = rep2 + 1 = 1 (x falls in 1st d2 repeatable set)
+
+   repr = [ ch[extra2],   ch[extra1],ch[extra] ]
+ 	  [   b, 		c,      b   ]
 
 
   a,b,c,d,
@@ -21,7 +29,7 @@
 
   baa,bab,bac,bad, bba,bbb,bbc,bbd, bca,bcb,bcc,bcd, bda,bdb,bdc,bdd,
   caa,cab,cac,cad, cba,cbb,cbc,cbd, cca,ccb,ccc,ccd, cda,cdb,cdc,cdd,
-  daa,cab,cac,cad, cba,cbb,cbc,cbd, cca,ccb,ccc,ccd, cda,cdb,cdc,ddd,
+  daa,dab,dac,dad, dba,dbb,dbc,dbd, dca,dcb,dcc,dcd, dda,ddb,ddc,ddd,
 
   baaa,
 
