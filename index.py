@@ -52,8 +52,6 @@ def encrypt(decimal, chars=[]):
     rep = x//b
     x = rep + 1
   repr.reverse()
-  shf = repr[0]
-  repr[0] = chars[chars.index(shf) - 1]
   return "".join(repr)
 
 names = redis.keys("sys:*:name")
