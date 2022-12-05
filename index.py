@@ -46,11 +46,14 @@ def encrypt(decimal, chars=[]):
   b = len(chars)
   x = decimal
   repr = []
-  while x > 1:
-    index = x%b
-    repr.append(chars[index])
-    rep = x//b
-    x = rep + 1
+  while True:
+    rep = x//b # 4/4 = 1, 0
+    index = x%b # 4%4=0, 2
+    x = rep + 1 #2, 1
+    repr.append(chars[index]) #ba
+    if x == 1:
+      break
+
   repr.reverse()
   return "".join(repr)
 
@@ -115,10 +118,6 @@ while ch != 99:
     x = int(input("Enter a decimal number representative, positive integer only: "))
     if x < 0:
       break
-    if x < len(chars):
-      print(chars[x])
-      time.sleep(2)
-      continue
     print(encrypt(x, chars))
     time.sleep(2)
     continue
