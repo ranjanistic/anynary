@@ -1,4 +1,13 @@
 # Own number system
+import time
+import redis
+
+SYS_NAME = "sys:"
+
+redis = redis.Redis(host='localhost', port=6379, db=0)
+
+def key_sysname(n):
+ return f"sys:{n}:name"
 
 def encrypt(decimal, chars=[]):
   """
@@ -39,53 +48,82 @@ def encrypt(decimal, chars=[]):
   repr = []
   while x > 1:
     index = x%b
+    repr.append(chars[index])
     rep = x//b
     x = rep + 1
-    repr.append(chars[index])
   repr.reverse()
+  shf = repr[0]
+  repr[0] = chars[chars.index(shf) - 1]
   return "".join(repr)
 
-print("\n\u001B[34mCreate your own counting representation system.\u001B[0m\n")
+names = redis.keys("sys:*:name")
+if len(names):
+  print("Existing systems found")
+  for i,n in enumerate(names):
+    print(f"{i}) {n.decode('utf-8').split(':')[1]}")
+print(f"-1) Create new system")
 
-base = input("Enter the max count of unique characters ")
+opt = int(input("Choose: "))
 
-if not base.isdigit():
-  print("Invalid integer")
-  exit(1)
-base = int(base) - 1
-chars = []
+if opt >= 0:
+#  print(names)
+  name = names[opt].decode("utf-8")
+  chars = redis.zrange(name, 0, -1)
+  chars = list(map(lambda x: x.decode("utf-8"), list(chars)))
+  print(chars)
+  base = len(chars)
+  sys = name.split(":")[1]
+else:
+  print("\n\u001B[34mCreate your own counting representation system.\u001B[0m\n")
 
-for i in range(0,base):
-  ch = None
-  while not ch:
-    ch = str(input(f"Enter representation for {i+1} "))
-  chars.append(ch)
+  base = input("Enter the max count of unique characters ")
 
-z = str(input(f"Enter representation for nothingness (default:0) "))
-z = z or '0'
+  if not base.isdigit():
+    print("Invalid integer")
+    exit(1)
+  base = int(base) - 1
 
-chars.insert(0,z)
+  z = str(input(f"Enter representation for nothingness (default:0) "))
+  z = z or '0'
 
-print(chars)
-base = len(chars)
-sys = print("Name of your counting system: ")
-sys = sys or "your"
+  chars = [z]
+
+  for i in range(0,base):
+    ch = None
+    while not ch or ch in chars:
+      ch = str(input(f"Enter unique representation for {i+1} "))
+    chars.append(ch)
+
+  print(chars)
+  base = len(chars)
+  sys = input("Name of your counting system: ")
+  sys = sys or "your"
+  data = {}
+  for i,c in enumerate(chars):
+    data[c] = i
+  redis.zadd(key_sysname(sys), data)
+
 ch = -1
+print(f"1) Convert a decimal number representative to {sys} representative")
+print(f"2) Convert a {sys} number representative to decimal representative")
+print(f"3) Show all decimal number representations in {sys} system representative")
+print("99) Exit\n")
+
+print("\nWhat do you want from your system?\n")
+ch = int(input("Choice: "))
+
 while ch != 99:
-  print("\nWhat do you want from your system?\n")
-
-  print(f"1) Convert a decimal number representative to {sys} representative")
-  print(f"2) Convert a {sys} number representative to decimal representative")
-  print(f"3) Show all decimal number representations in {sys} system representative")
-  print("99) Exit\n")
-  ch = int(input("Choice: "))
-
   if ch == 1:
     x = int(input("Enter a decimal number representative, positive integer only: "))
-    if x in range(0,base):
+    if x < 0:
+      break
+    if x < len(chars):
       print(chars[x])
+      time.sleep(2)
       continue
     print(encrypt(x, chars))
+    time.sleep(2)
+    continue
   elif ch == 2:
     x = input(f"Enter a {sys} number representative: ")
   elif ch == 3:
